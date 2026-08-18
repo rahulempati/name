@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <title>Happy Birthday 🎂</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100dvh;
+      font-family: "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 105, 180, 0.35), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.35), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(251, 191, 36, 0.2), transparent 35%),
+        linear-gradient(135deg, #16001f, #3b0754, #831843, #1e1b4b);
+      background-size: 200% 200%;
+      animation: backgroundMove 12s ease infinite;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding:
+        max(12px, env(safe-area-inset-top))
+        max(12px, env(safe-area-inset-right))
+        max(12px, env(safe-area-inset-bottom))
+        max(12px, env(safe-area-inset-left));
+
+      position: relative;
+    }
+
+    @keyframes backgroundMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Floating lights */
+    .light {
+      position: fixed;
+      width: 7px;
+      height: 7px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.7;
+      box-shadow: 0 0 12px #fff, 0 0 25px #f9a8d4;
+      animation: floatLight linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatLight {
+      0% {
+        transform: translateY(110vh) scale(0.5);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.8;
+      }
+
+      80% {
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateY(-10vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* Card entrance */
+    .birthday-card {
+      position: relative;
+      width: min(100%, 430px);
+      max-height: calc(100dvh - 24px);
+
+      overflow: hidden;
+
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+
+      border-radius: 28px;
+
+      padding: clamp(18px, 5vw, 32px);
+
+      text-align: center;
+
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.35),
+        0 0 40px rgba(244, 114, 182, 0.2);
+
+      animation: cardAppear 0.9s ease-out;
+    }
+
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.94);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Glow around card */
+    .birthday-card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 30px;
+      padding: 2px;
+
+      background: linear-gradient(
+        120deg,
+        #f9a8d4,
+        #c084fc,
+        #f472b6,
+        #facc15,
+        #f9a8d4
+      );
+
+      background-size: 300% 300%;
+      animation: borderGlow 5s linear infinite;
+
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+
+      pointer-events: none;
+    }
+
+    @keyframes borderGlow {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Birthday emoji animation */
+    .cake {
+      font-size: clamp(42px, 12vw, 65px);
+      line-height: 1;
+      margin-bottom: 12px;
+
+      animation:
+        cakeFloat 3s ease-in-out infinite,
+        cakeGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes cakeFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-8px) rotate(2deg);
+      }
+    }
+
+    @keyframes cakeGlow {
+      from {
+        filter: drop-shadow(0 0 3px rgba(244, 114, 182, 0.3));
+      }
+
+      to {
+        filter: drop-shadow(0 0 15px rgba(244, 114, 182, 0.8));
+      }
+    }
+
+    /* Main title */
+    .title {
+      background: linear-gradient(
+        90deg,
+        #ec4899,
+        #8b5cf6,
+        #ec4899,
+        #f59e0b
+      );
+
+      background-size: 300% auto;
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+
+      animation: titleGradient 4s linear infinite;
+
+      font-size: clamp(26px, 8vw, 40px);
+      line-height: 1.1;
+      font-weight: 900;
+    }
+
+    @keyframes titleGradient {
+      to {
+        background-position: 300% center;
+      }
+    }
+
+    /* Typewriter */
+    .typing-container {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .typing-text {
+      color: #4b5563;
+      font-size: clamp(14px, 4vw, 17px);
+      line-height: 1.6;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: #ec4899;
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Quote */
+    .quote {
+      color: #6b7280;
+      font-size: clamp(12px, 3.4vw, 14px);
+      line-height: 1.5;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    /* Button */
+    .surprise-btn {
+      position: relative;
+      overflow: hidden;
+
+      background: linear-gradient(
+        135deg,
+        #ec4899,
+        #8b5cf6
+      );
+
+      color: white;
+      font-weight: 700;
+
+      border: none;
+      border-radius: 14px;
+
+      padding: 13px 22px;
+
+      width: 100%;
+      max-width: 280px;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 8px 20px rgba(236, 72, 153, 0.35);
+
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .surprise-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 12px 28px rgba(236, 72, 153, 0.45);
+    }
+
+    .surprise-btn:active {
+      transform: scale(0.96);
+    }
+
+    .surprise-btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.5),
+        transparent
+      );
+
+      transform: skewX(-20deg);
+      animation: buttonShine 3s infinite;
+    }
+
+    @keyframes buttonShine {
+      0% {
+        left: -100%;
+      }
+
+      40%,
+      100% {
+        left: 150%;
+      }
+    }
+
+    /* Surprise message */
+    .surprise {
+      margin-top: 14px;
+      color: #9333ea;
+      font-size: clamp(15px, 4vw, 19px);
+      font-weight: 800;
+
+      animation: surpriseAppear 0.6s ease-out;
+    }
+
+    @keyframes surpriseAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Balloons */
+    .balloon {
+      position: fixed;
+      bottom: -100px;
+      font-size: 40px;
+      animation: balloonUp linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes balloonUp {
+      from {
+        transform: translateY(0) rotate(-8deg);
+      }
+
+      to {
+        transform: translateY(-120vh) rotate(8deg);
+      }
+    }
+
+    /* Small screens */
+    @media (max-height: 650px) {
+      .birthday-card {
+        padding: 16px 20px;
+        border-radius: 22px;
+      }
+
+      .cake {
+        font-size: 42px;
+        margin-bottom: 7px;
+      }
+
+      .title {
+        font-size: 27px;
+      }
+
+      .typing-container {
+        min-height: 48px;
+      }
+
+      .quote {
+        margin-top: 6px;
+      }
+
+      .surprise-btn {
+        margin-top: 12px;
+        padding: 10px 18px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .birthday-card {
+        padding: 15px;
+      }
+
+      .title {
+        font-size: 25px;
+      }
+
+      .typing-text {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Floating balloons -->
+  <div class="balloon" style="left: 5%; animation-duration: 13s;">🎈</div>
+  <div class="balloon" style="left: 22%; animation-duration: 17s; animation-delay: 3s;">🎈</div>
+  <div class="balloon" style="left: 75%; animation-duration: 15s; animation-delay: 1s;">🎈</div>
+  <div class="balloon" style="left: 90%; animation-duration: 19s; animation-delay: 5s;">🎈</div>
+
+  <!-- Floating lights -->
+  <div class="light" style="left:8%; animation-duration:8s;"></div>
+  <div class="light" style="left:18%; animation-duration:11s; animation-delay:2s;"></div>
+  <div class="light" style="left:32%; animation-duration:9s; animation-delay:4s;"></div>
+  <div class="light" style="left:48%; animation-duration:12s; animation-delay:1s;"></div>
+  <div class="light" style="left:64%; animation-duration:10s; animation-delay:3s;"></div>
+  <div class="light" style="left:80%; animation-duration:13s; animation-delay:5s;"></div>
+  <div class="light" style="left:94%; animation-duration:9s; animation-delay:2s;"></div>
+
+
+  <!-- Birthday Card -->
+  <main class="birthday-card">
+
+    <div class="cake">🎂</div>
+
+    <h1 class="title">
+      Happy Birthday! 🎉
+    </h1>
+
+    <div class="flex justify-center gap-2 text-2xl sm:text-3xl my-3">
+      <span>🎈</span>
+      <span>🎁</span>
+      <span>✨</span>
+      <span>💖</span>
+    </div>
+
+    <!-- Typewriter message -->
+    <div class="typing-container">
+      <p class="typing-text">
+        <span id="typing"></span><span class="cursor"></span>
+      </p>
+    </div>
+
+    <p class="quote">
+      “Count your life by smiles, not tears.
+      Count your age by friends, not years.” ✨
+    </p>
+
+    <button
+      onclick="celebrate()"
+      class="surprise-btn mt-5"
+    >
+      Click for a Surprise 🎊
+    </button>
+
+    <p id="surprise" class="surprise hidden">
+      You are amazing! 💖<br />
+      Have the best birthday ever! 🥳✨
+    </p>
+
+  </main>
+
+
+  <script>
+
+    /* =========================
+       TYPEWRITER EFFECT
+    ========================= */
+
+    const message =
+      "Wishing you a beautiful day filled with love, laughter, happiness, and unforgettable memories. May your new year of life be brighter than ever! 💕";
+
+    const typingElement = document.getElementById("typing");
+
+    let index = 0;
+
+    function typeText() {
+      if (index < message.length) {
+
+        typingElement.textContent += message.charAt(index);
+
+        index++;
+
+        setTimeout(typeText, 35);
+      }
+    }
+
+    window.addEventListener("load", () => {
+      setTimeout(typeText, 700);
+    });
+
+
+    /* =========================
+       BIRTHDAY CELEBRATION
+    ========================= */
+
+    function celebrate() {
+
+      const surprise = document.getElementById("surprise");
+
+      surprise.classList.remove("hidden");
+
+      // Main confetti
+      confetti({
+        particleCount: 180,
+        spread: 100,
+        startVelocity: 40,
+        origin: {
+          y: 0.6
+        },
+        colors: [
+          "#ec4899",
+          "#8b5cf6",
+          "#facc15",
+          "#22c55e",
+          "#38bdf8"
+        ]
+      });
+
+      // Side explosions
+      setTimeout(() => {
+
+        confetti({
+          particleCount: 100,
+          angle: 60,
+          spread: 70,
+          origin: {
+            x: 0,
+            y: 0.7
+          }
+        });
+
+        confetti({
+          particleCount: 100,
+          angle: 120,
+          spread: 70,
+          origin: {
+            x: 1,
+            y: 0.7
+          }
+        });
+
+      }, 300);
+
+      // Extra celebration
+      setTimeout(() => {
+
+        confetti({
+          particleCount: 120,
+          spread: 160,
+          startVelocity: 30,
+          origin: {
+            x: 0.5,
+            y: 0.4
+          }
+        });
+
+      }, 800);
+    }
+
+  </script>
+
+</body>
+</html>
